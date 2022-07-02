@@ -5181,7 +5181,22 @@ var $author$project$Levels$LevelOne$LevelSetup = F2(
 	function (cols, rows) {
 		return {cols: cols, rows: rows};
 	});
-var $author$project$Levels$LevelOne$Cell = {};
+var $author$project$Levels$LevelOne$Cell = function (event) {
+	return {event: event};
+};
+var $author$project$Levels$LevelOne$East = {$: 'East'};
+var $author$project$Levels$LevelOne$Entrance = function (a) {
+	return {$: 'Entrance', a: a};
+};
+var $author$project$Levels$LevelOne$Exit = function (a) {
+	return {$: 'Exit', a: a};
+};
+var $author$project$Images$ImageModels$Goblin = {$: 'Goblin'};
+var $author$project$Levels$LevelOne$Monster = function (a) {
+	return {$: 'Monster', a: a};
+};
+var $author$project$Levels$LevelOne$NoEvent = {$: 'NoEvent'};
+var $author$project$Levels$LevelOne$North = {$: 'North'};
 var $elm$core$Dict$RBEmpty_elm_builtin = {$: 'RBEmpty_elm_builtin'};
 var $elm$core$Dict$empty = $elm$core$Dict$RBEmpty_elm_builtin;
 var $elm$core$Dict$Black = {$: 'Black'};
@@ -5308,17 +5323,42 @@ var $elm$core$Dict$fromList = function (assocs) {
 var $author$project$Levels$LevelOne$grid = $elm$core$Dict$fromList(
 	_List_fromArray(
 		[
-			_Utils_Tuple2(1, $author$project$Levels$LevelOne$Cell),
-			_Utils_Tuple2(2, $author$project$Levels$LevelOne$Cell),
-			_Utils_Tuple2(9, $author$project$Levels$LevelOne$Cell),
-			_Utils_Tuple2(10, $author$project$Levels$LevelOne$Cell),
-			_Utils_Tuple2(11, $author$project$Levels$LevelOne$Cell),
-			_Utils_Tuple2(18, $author$project$Levels$LevelOne$Cell),
-			_Utils_Tuple2(25, $author$project$Levels$LevelOne$Cell),
-			_Utils_Tuple2(26, $author$project$Levels$LevelOne$Cell),
-			_Utils_Tuple2(27, $author$project$Levels$LevelOne$Cell),
-			_Utils_Tuple2(28, $author$project$Levels$LevelOne$Cell),
-			_Utils_Tuple2(35, $author$project$Levels$LevelOne$Cell)
+			_Utils_Tuple2(
+			1,
+			$author$project$Levels$LevelOne$Cell(
+				$author$project$Levels$LevelOne$Entrance($author$project$Levels$LevelOne$North))),
+			_Utils_Tuple2(
+			2,
+			$author$project$Levels$LevelOne$Cell($author$project$Levels$LevelOne$NoEvent)),
+			_Utils_Tuple2(
+			9,
+			$author$project$Levels$LevelOne$Cell($author$project$Levels$LevelOne$NoEvent)),
+			_Utils_Tuple2(
+			10,
+			$author$project$Levels$LevelOne$Cell($author$project$Levels$LevelOne$NoEvent)),
+			_Utils_Tuple2(
+			11,
+			$author$project$Levels$LevelOne$Cell(
+				$author$project$Levels$LevelOne$Monster($author$project$Images$ImageModels$Goblin))),
+			_Utils_Tuple2(
+			18,
+			$author$project$Levels$LevelOne$Cell($author$project$Levels$LevelOne$NoEvent)),
+			_Utils_Tuple2(
+			25,
+			$author$project$Levels$LevelOne$Cell($author$project$Levels$LevelOne$NoEvent)),
+			_Utils_Tuple2(
+			26,
+			$author$project$Levels$LevelOne$Cell($author$project$Levels$LevelOne$NoEvent)),
+			_Utils_Tuple2(
+			27,
+			$author$project$Levels$LevelOne$Cell($author$project$Levels$LevelOne$NoEvent)),
+			_Utils_Tuple2(
+			28,
+			$author$project$Levels$LevelOne$Cell($author$project$Levels$LevelOne$NoEvent)),
+			_Utils_Tuple2(
+			35,
+			$author$project$Levels$LevelOne$Cell(
+				$author$project$Levels$LevelOne$Exit($author$project$Levels$LevelOne$East)))
 		]));
 var $author$project$Levels$LevelOne$levelOne = A4(
 	$author$project$Levels$LevelOne$Level,
@@ -5748,15 +5788,43 @@ var $author$project$CssBlocks$gridCss = F2(
 					'repeat(' + ($elm$core$String$fromInt(numberOfColumns) + ', 1fr)')),
 					A2($elm$html$Html$Attributes$style, 'width', rowWidth),
 					A2($elm$html$Html$Attributes$style, 'margin', '25px'),
-					A2($elm$html$Html$Attributes$style, 'padding', '5px')
+					A2($elm$html$Html$Attributes$style, 'padding', '5px'),
+					A2($elm$html$Html$Attributes$style, 'background-color', 'black')
 				]),
-			$author$project$CssBlocks$borderCss(5));
+			$author$project$CssBlocks$borderCss(20));
 	});
-var $author$project$Images$ImageModels$ImageModel = F2(
-	function (path, marginRight) {
-		return {marginRight: marginRight, path: path};
+var $author$project$CssBlocks$doorCss = F2(
+	function (color, direction) {
+		var borderSide = function () {
+			switch (direction.$) {
+				case 'North':
+					return 'top';
+				case 'East':
+					return 'right';
+				case 'South':
+					return 'left';
+				default:
+					return 'bottom';
+			}
+		}();
+		return _List_fromArray(
+			[
+				A2($elm$html$Html$Attributes$style, 'border-' + (borderSide + '-color'), color),
+				A2($elm$html$Html$Attributes$style, 'border-' + (borderSide + '-width'), '12px'),
+				A2($elm$html$Html$Attributes$style, 'border-' + (borderSide + '-style'), 'dashed'),
+				A2($elm$html$Html$Attributes$style, 'margin-' + borderSide, '-12px'),
+				A2($elm$html$Html$Attributes$style, 'margin-' + borderSide, '-12px')
+			]);
 	});
-var $author$project$Images$ImageModels$heroModel = A2($author$project$Images$ImageModels$ImageModel, 'src/Images/knight.png', '5%');
+var $author$project$CssBlocks$centerParentCss = _List_fromArray(
+	[
+		A2($elm$html$Html$Attributes$style, 'height', '100%'),
+		A2($elm$html$Html$Attributes$style, 'width', '100%'),
+		A2($elm$html$Html$Attributes$style, 'display', 'flex'),
+		A2($elm$html$Html$Attributes$style, 'align-items', 'center'),
+		A2($elm$html$Html$Attributes$style, 'justify-content', 'center')
+	]);
+var $elm$html$Html$img = _VirtualDom_node('img');
 var $elm$json$Json$Encode$string = _Json_wrap;
 var $elm$html$Html$Attributes$stringProperty = F2(
 	function (key, string) {
@@ -5766,69 +5834,156 @@ var $elm$html$Html$Attributes$stringProperty = F2(
 			$elm$json$Json$Encode$string(string));
 	});
 var $elm$html$Html$Attributes$alt = $elm$html$Html$Attributes$stringProperty('alt');
-var $elm$html$Html$img = _VirtualDom_node('img');
 var $elm$html$Html$Attributes$src = function (url) {
 	return A2(
 		$elm$html$Html$Attributes$stringProperty,
 		'src',
 		_VirtualDom_noJavaScriptOrHtmlUri(url));
 };
+var $author$project$CssBlocks$imgCss = function (model) {
+	return _List_fromArray(
+		[
+			$elm$html$Html$Attributes$src(model.path),
+			$elm$html$Html$Attributes$alt('knight'),
+			A2($elm$html$Html$Attributes$style, 'width', '40%'),
+			A2($elm$html$Html$Attributes$style, 'height', '40%'),
+			A2($elm$html$Html$Attributes$style, 'margin-right', model.marginRight)
+		]);
+};
+var $author$project$Main$doubleImageView = F2(
+	function (hero, image) {
+		return A2(
+			$elm$html$Html$div,
+			$author$project$CssBlocks$centerParentCss,
+			_List_fromArray(
+				[
+					A2(
+					$elm$html$Html$img,
+					$author$project$CssBlocks$imgCss(hero),
+					_List_Nil),
+					A2(
+					$elm$html$Html$img,
+					$author$project$CssBlocks$imgCss(image),
+					_List_Nil)
+				]));
+	});
+var $author$project$Images$ImageModels$ImageModel = F2(
+	function (path, marginRight) {
+		return {marginRight: marginRight, path: path};
+	});
+var $author$project$Images$ImageModels$goblinModel = A2($author$project$Images$ImageModels$ImageModel, 'src/Images/goblin.png', '0%');
+var $author$project$Images$ImageModels$getMonsterModel = function (monsterType) {
+	return $author$project$Images$ImageModels$goblinModel;
+};
+var $author$project$Images$ImageModels$heroModel = A2($author$project$Images$ImageModels$ImageModel, 'src/Images/knight.png', '5%');
 var $author$project$Main$imageView = function (imageModel) {
 	return A2(
 		$elm$html$Html$div,
-		_List_fromArray(
-			[
-				A2($elm$html$Html$Attributes$style, 'height', '100%'),
-				A2($elm$html$Html$Attributes$style, 'width', '100%'),
-				A2($elm$html$Html$Attributes$style, 'display', 'flex'),
-				A2($elm$html$Html$Attributes$style, 'align-items', 'center'),
-				A2($elm$html$Html$Attributes$style, 'justify-content', 'center')
-			]),
+		$author$project$CssBlocks$centerParentCss,
 		_List_fromArray(
 			[
 				A2(
 				$elm$html$Html$img,
-				_List_fromArray(
-					[
-						$elm$html$Html$Attributes$src(imageModel.path),
-						$elm$html$Html$Attributes$alt('knight'),
-						A2($elm$html$Html$Attributes$style, 'width', '40%'),
-						A2($elm$html$Html$Attributes$style, 'height', '40%'),
-						A2($elm$html$Html$Attributes$style, 'margin-right', imageModel.marginRight)
-					]),
+				$author$project$CssBlocks$imgCss(imageModel),
 				_List_Nil)
 			]));
 };
+var $author$project$CssBlocks$emptyCss = _List_Nil;
 var $author$project$CssBlocks$squareCss = F2(
-	function (thickness, color) {
+	function (borderThickness, color) {
 		return _Utils_ap(
 			_List_fromArray(
 				[
 					A2($elm$html$Html$Attributes$style, 'aspect-ratio', '1/1'),
 					A2($elm$html$Html$Attributes$style, 'align-items', 'center'),
 					A2($elm$html$Html$Attributes$style, 'align-items', 'center'),
-					A2($elm$html$Html$Attributes$style, 'margin', '1px'),
 					A2($elm$html$Html$Attributes$style, 'background-color', color)
 				]),
-			$author$project$CssBlocks$borderCss(thickness));
+			function () {
+				if (borderThickness.$ === 'Just') {
+					var a = borderThickness.a;
+					return $author$project$CssBlocks$borderCss(a);
+				} else {
+					return $author$project$CssBlocks$emptyCss;
+				}
+			}());
+	});
+var $author$project$Main$handleCellView = F2(
+	function (holdsHero, cell) {
+		var _v0 = cell.event;
+		switch (_v0.$) {
+			case 'Monster':
+				var monsterType = _v0.a;
+				return A2(
+					$elm$html$Html$div,
+					A2(
+						$author$project$CssBlocks$squareCss,
+						$elm$core$Maybe$Just(1),
+						'white'),
+					_List_fromArray(
+						[
+							holdsHero ? A2(
+							$author$project$Main$doubleImageView,
+							$author$project$Images$ImageModels$heroModel,
+							$author$project$Images$ImageModels$getMonsterModel(monsterType)) : $author$project$Main$imageView(
+							$author$project$Images$ImageModels$getMonsterModel(monsterType))
+						]));
+			case 'NoEvent':
+				return A2(
+					$elm$html$Html$div,
+					A2(
+						$author$project$CssBlocks$squareCss,
+						$elm$core$Maybe$Just(1),
+						'white'),
+					_List_fromArray(
+						[
+							holdsHero ? $author$project$Main$imageView($author$project$Images$ImageModels$heroModel) : A2($elm$html$Html$div, _List_Nil, _List_Nil)
+						]));
+			case 'Entrance':
+				var direction = _v0.a;
+				return A2(
+					$elm$html$Html$div,
+					_Utils_ap(
+						A2(
+							$author$project$CssBlocks$squareCss,
+							$elm$core$Maybe$Just(1),
+							'white'),
+						A2($author$project$CssBlocks$doorCss, 'green', direction)),
+					_List_fromArray(
+						[
+							holdsHero ? $author$project$Main$imageView($author$project$Images$ImageModels$heroModel) : A2($elm$html$Html$div, _List_Nil, _List_Nil)
+						]));
+			default:
+				var direction = _v0.a;
+				return A2(
+					$elm$html$Html$div,
+					_Utils_ap(
+						A2(
+							$author$project$CssBlocks$squareCss,
+							$elm$core$Maybe$Just(1),
+							'white'),
+						A2($author$project$CssBlocks$doorCss, 'orange', direction)),
+					_List_fromArray(
+						[
+							holdsHero ? $author$project$Main$imageView($author$project$Images$ImageModels$heroModel) : A2($elm$html$Html$div, _List_Nil, _List_Nil)
+						]));
+		}
 	});
 var $author$project$Main$viewCell = F3(
 	function (level, heroSpot, currentCell) {
 		var cellFromDict = A2($elm$core$Dict$get, currentCell, level.grid);
-		var color = function () {
-			if (cellFromDict.$ === 'Nothing') {
-				return 'black';
-			} else {
-				return 'white';
-			}
-		}();
-		return A2(
-			$elm$html$Html$div,
-			A2($author$project$CssBlocks$squareCss, 2, color),
-			_List_fromArray(
-				[
-					_Utils_eq(heroSpot, currentCell) ? $author$project$Main$imageView($author$project$Images$ImageModels$heroModel) : A2($elm$html$Html$div, _List_Nil, _List_Nil)
-				]));
+		if (cellFromDict.$ === 'Nothing') {
+			return A2(
+				$elm$html$Html$div,
+				A2($author$project$CssBlocks$squareCss, $elm$core$Maybe$Nothing, 'black'),
+				_List_Nil);
+		} else {
+			var cell = cellFromDict.a;
+			return A2(
+				$author$project$Main$handleCellView,
+				_Utils_eq(heroSpot, currentCell),
+				cell);
+		}
 	});
 var $author$project$Main$viewLevel = F2(
 	function (level, heroSpot) {

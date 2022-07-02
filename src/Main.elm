@@ -5,10 +5,10 @@ import Browser.Events
 import CssBlocks
 import Dict
 import Html exposing (Attribute, Html, div)
-import Html.Attributes as Attr
-import Images.ImageModels exposing (ImageModel, heroModel)
+import Html.Attributes
+import Images.ImageModels exposing (ImageModel, MonsterType(..), getMonsterModel, heroModel)
 import Json.Decode as Decode
-import Levels.LevelOne exposing (Level, LevelSetup, levelOne)
+import Levels.LevelOne exposing (Cell, CellEvent(..), Direction, Level, LevelSetup, levelOne)
 import List
 
 
@@ -82,42 +82,82 @@ viewCell level heroSpot currentCell =
     let
         cellFromDict =
             Dict.get currentCell level.grid
-
-        color =
-            case cellFromDict of
-                Nothing ->
-                    "black"
-
-                Just _ ->
-                    "white"
     in
-    div (CssBlocks.squareCss 2 color)
-        [ if heroSpot == currentCell then
-            imageView heroModel
+    case cellFromDict of
+        Nothing ->
+            div (CssBlocks.squareCss Nothing "black") []
 
-          else
-            div [] []
+        Just cell ->
+            handleCellView (heroSpot == currentCell) cell
+
+
+
+--    ( borderThickness, color, event ) =
+--        case cellFromDict of
+--            Nothing ->
+--                ( Nothing, "black", NoEvent )
+--
+--            Just cell ->
+--                ( Just 1, "white", cell.event )
+--
+--    hasHero =
+--        heroSpot == currentCell
+--in
+--div (CssBlocks.squareCss borderThickness color) [ handleCellView hasHero event ]
+
+
+handleCellView : Bool -> Cell -> Html msg
+handleCellView holdsHero cell =
+    case cell.event of
+        Monster monsterType ->
+            div (CssBlocks.squareCss (Just 1) "white")
+                [ if holdsHero then
+                    doubleImageView heroModel (getMonsterModel monsterType)
+
+                  else
+                    imageView (getMonsterModel monsterType)
+                ]
+
+        NoEvent ->
+            div (CssBlocks.squareCss (Just 1) "white")
+                [ if holdsHero then
+                    imageView heroModel
+
+                  else
+                    div [] []
+                ]
+
+        Entrance direction ->
+            div (CssBlocks.squareCss (Just 1) "white" ++ CssBlocks.doorCss "green" direction)
+                [ if holdsHero then
+                    imageView heroModel
+
+                  else
+                    div [] []
+                ]
+
+        Exit direction ->
+            div (CssBlocks.squareCss (Just 1) "white" ++ CssBlocks.doorCss "orange" direction)
+                [ if holdsHero then
+                    imageView heroModel
+
+                  else
+                    div [] []
+                ]
+
+
+doubleImageView : ImageModel -> ImageModel -> Html msg
+doubleImageView hero image =
+    div
+        CssBlocks.centerParentCss
+        [ Html.img (CssBlocks.imgCss hero) []
+        , Html.img (CssBlocks.imgCss image) []
         ]
 
 
 imageView : ImageModel -> Html msg
 imageView imageModel =
-    div
-        [ Attr.style "height" "100%"
-        , Attr.style "width" "100%"
-        , Attr.style "display" "flex"
-        , Attr.style "align-items" "center"
-        , Attr.style "justify-content" "center"
-        ]
-        [ Html.img
-            [ Attr.src imageModel.path
-            , Attr.alt "knight"
-            , Attr.style "width" "40%"
-            , Attr.style "height" "40%"
-            , Attr.style "margin-right" imageModel.marginRight
-            ]
-            []
-        ]
+    div CssBlocks.centerParentCss [ Html.img (CssBlocks.imgCss imageModel) [] ]
 
 
 handleKeyPressed : String -> Model -> ( Model, Cmd Msg )

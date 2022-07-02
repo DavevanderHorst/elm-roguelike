@@ -1,6 +1,7 @@
 module Levels.LevelOne exposing (..)
 
 import Dict exposing (Dict)
+import Images.ImageModels exposing (MonsterType(..))
 
 
 levelOne =
@@ -21,22 +22,36 @@ type alias LevelSetup =
     }
 
 
+type CellEvent
+    = Monster MonsterType
+    | NoEvent
+    | Entrance Direction
+    | Exit Direction
+
+
+type Direction
+    = North
+    | East
+    | South
+    | West
+
+
 type alias Cell =
-    {}
+    { event : CellEvent }
 
 
 grid : Dict Int Cell
 grid =
     Dict.fromList
-        [ ( 1, Cell )
-        , ( 2, Cell )
-        , ( 9, Cell )
-        , ( 10, Cell )
-        , ( 11, Cell )
-        , ( 18, Cell )
-        , ( 25, Cell )
-        , ( 26, Cell )
-        , ( 27, Cell )
-        , ( 28, Cell )
-        , ( 35, Cell )
+        [ ( 1, Cell (Entrance North) )
+        , ( 2, Cell NoEvent )
+        , ( 9, Cell NoEvent )
+        , ( 10, Cell NoEvent )
+        , ( 11, Cell (Monster Goblin) )
+        , ( 18, Cell NoEvent )
+        , ( 25, Cell NoEvent )
+        , ( 26, Cell NoEvent )
+        , ( 27, Cell NoEvent )
+        , ( 28, Cell NoEvent )
+        , ( 35, Cell (Exit East) )
         ]
